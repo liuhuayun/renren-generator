@@ -3,23 +3,38 @@ server:
     tomcat:
         max-threads: 10
         min-spare-threads: 10
-    port: 80
-
+    port: 8888
+    
 # mysql
 spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         driverClassName: com.mysql.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/renren_fast?useUnicode=true&characterEncoding=UTF-8
-        username: renren
-        password: 123456
+        url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: root
     jackson:
         time-zone: GMT+8
         date-format: yyyy-MM-dd HH:mm:ss
+# static resources
     resources:
             static-locations: classpath:/static/,classpath:/views/
-
-# Mybatis配置
+# freemarker       
+    freemarker:
+      template-loader-path: classpath:/fkTemplate/
+      cache: false
+      prefix: 
+      suffix: .html
+      charset: UTF-8
+      content-type: text/html
+    
+#Mybatis配置
 mybatis:
     mapperLocations: classpath:mapper/**/*.xml
-
+    
+logging:
+  level:
+    io.renren: debug
+security:
+  basic:
+    enabled: false
