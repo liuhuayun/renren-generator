@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Hello WebSocket</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<div>  
+    <div>  
+        <button id="connect" onclick="connect();">Connect</button>  
+        <button id="connectAny" onclick="connectAny();">ConnectAny</button>  
+        <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>  
+    </div>  
+    <div id="conversationDiv">  
+        <label>What is your name?</label><input type="text" id="name" value="匿名用户"/>  
+        <button id="sendName" onclick="sendName();">Send</button>  
+        <p id="response"></p>  
+    </div>  
+</div>
+</body>
+
+<script src="/js/webSocket/jquery.js"></script> 
+<script src="/js/webSocket/sockjs.min.js"></script>  
+<script src="/js/webSocket/stomp.min.js"></script>  
+<script type="text/javascript">
+
+$(document).ready(function(){  
+   // connect();  
+    //checkoutUserlist();  
+});
+var stompClient = null;  
+function setConnected(connected) {  
+    $('#connect').attr("disabled",connected);
+    $('#disconnect').attr("disabled",!connected);
+    $('#conversationDiv').css('visibility',(connected ? 'visible' : 'hidden'));  
+    $('#response').html('');  
+}  
+//连接websocket
+function connect() {  
+    var userid = $('#name').val();  
+    var socket = new SockJS("http://localhost:8888/hello");  
+    stompClient = Stomp.over(socket);  
+    stompClient.connect({}, function(frame) {  
+        setConnected(true);  
+        console.log('Connected: ' + frame);  
+        stompClient.subscribe('/topic/greetings', function(greeting){  
+            showGreeting(JSON.parse(greeting.body).content);  
+        });  
+        stompClient.subscribe('/user/' + userid + '/message',function(greeting){  
+        	showGreeting(JSON.parse(result.body).content);
+        });  
+    });  
+} 
+function connectAny() {  
+    var socket = new SockJS("http://localhost:8888/mymsg");  
+    stompClient = Stomp.over(socket);  
+    stompClient.connect({}, function(frame) {  
+        setConnected(true);  
+        console.log('Connected: ' + frame);  
+        stompClient.subscribe('/topic/feed', function(result){  
+            showGreeting(JSON.parse(result.body).content);  
+        });  
+    });  
+}
+//发送消息
+function sendName() {  
+    var name = $('#name').val();  
+    //stompClient.send("/app/hello", {atytopic:"greetings"}, JSON.stringify({ 'name': name }));  
+    stompClient.send("/app/mymsg", {atytopic:"123"}, JSON.stringify({ 'name': name }));
+}
+//关闭连接
+function disconnect() {  
+    if (stompClient != null) {  
+        stompClient.disconnect();  
+    }  
+    setConnected(false);  
+    console.log("Disconnected");  
+}  
+//显示消息
+function showGreeting(message) {  
+    var response = document.getElementById('response');  
+    var p = document.createElement('p');  
+    p.style.wordWrap = 'break-word';  
+    p.appendChild(document.createTextNode(message));  
+    response.appendChild(p);  
+}  
+</script>
+</html>
