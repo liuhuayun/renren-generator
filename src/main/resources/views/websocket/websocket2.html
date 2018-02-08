@@ -13,7 +13,7 @@
         <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>  
     </div>  
     <div id="conversationDiv">  
-        <label>What is your name?</label><input type="text" id="name" value="匿名用户"/>  
+        <label>What is your name?</label><input type="text" id="name" value="1"/>  
         <button id="sendName" onclick="sendName();">Send</button>  
         <p id="response"></p>  
     </div>  
@@ -26,7 +26,7 @@
 <script type="text/javascript">
 
 $(document).ready(function(){  
-   // connect();  
+    connect();  
     //checkoutUserlist();  
 });
 var stompClient = null;  
@@ -44,10 +44,11 @@ function connect() {
     stompClient.connect({}, function(frame) {  
         setConnected(true);  
         console.log('Connected: ' + frame);  
-        stompClient.subscribe('/topic/greetings', function(greeting){  
-            showGreeting(JSON.parse(greeting.body).content);  
+        stompClient.subscribe('/topic/greetings', function(result){  
+            showGreeting(JSON.parse(result.body).content);  
         });  
-        stompClient.subscribe('/user/' + userid + '/message',function(greeting){  
+        stompClient.subscribe('/user/' + userid + '/message',function(result){  
+        	console.log(result);
         	showGreeting(JSON.parse(result.body).content);
         });  
     });  
@@ -66,8 +67,8 @@ function connectAny() {
 //发送消息
 function sendName() {  
     var name = $('#name').val();  
-    //stompClient.send("/app/hello", {atytopic:"greetings"}, JSON.stringify({ 'name': name }));  
-    stompClient.send("/app/mymsg", {atytopic:"123"}, JSON.stringify({ 'name': name }));
+    stompClient.send("/app/hello", {atytopic:"greetings"}, JSON.stringify({ 'name': name })); 
+    //stompClient.send("/app/mymsg", {atytopic:"123"}, JSON.stringify({ 'name': name }));
 }
 //关闭连接
 function disconnect() {  

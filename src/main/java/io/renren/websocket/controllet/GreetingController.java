@@ -57,7 +57,7 @@ public class GreetingController {
     @SendToUser("/message")  
     public Greeting handleSubscribe() {  
         System.out.println("this is the @SubscribeMapping('/marco')");  
-        return new Greeting("I am a msg from SubscribeMapping('/macro').");  
+        return new Greeting("发给有那个户");  
     }  
   
     /** 
@@ -66,7 +66,7 @@ public class GreetingController {
      */  
     @RequestMapping(path = "/send", method = RequestMethod.GET)  
     public Greeting send() {  
-//    	template.convertAndSend(arg0, arg1);
+    	//template.convertAndSend(arg0, arg1);
         simpMessageSendingOperations.convertAndSendToUser("1", "/message", new Greeting("I am a msg from SubscribeMapping('/macro')."));  
         return new Greeting("I am a msg from SubscribeMapping('/macro').");  
     }  
