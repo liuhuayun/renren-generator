@@ -20,7 +20,7 @@ import io.renren.entity.Greeting;
  * Created by haoyuyang on 2016/11/25. 
  */  
 @RestController  
-public class GreetingController {  
+public class SocketController {  
   
     @Autowired  
     private SimpMessageSendingOperations simpMessageSendingOperations;
