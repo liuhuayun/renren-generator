@@ -11,11 +11,14 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 @ServerEndpoint(value = "/websocket")
 @Component
 public class MyWebSocket {
+	
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static AtomicInteger onlineCount = new AtomicInteger(0);
 
@@ -24,8 +27,19 @@ public class MyWebSocket {
 
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
+    
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
+    
+	public RedisTemplate<String, Object> getRedisTemplate() {
+		return redisTemplate;
+	}
 
-    /**
+	public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
+		this.redisTemplate = redisTemplate;
+	}
+
+	/**
      * 连接建立成功调用的方法*/
     @OnOpen
     public void onOpen(Session session) {
@@ -96,4 +110,5 @@ public class MyWebSocket {
             }
         }
     }
+    
 }
