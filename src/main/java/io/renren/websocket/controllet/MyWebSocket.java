@@ -1,4 +1,4 @@
-package io.renren.websocket;
+package io.renren.websocket.controllet;
 
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
